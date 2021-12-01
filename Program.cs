@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 
 namespace advent_of_code {
     class Program {
@@ -7,9 +8,13 @@ namespace advent_of_code {
             day1_1();
             day1_2();
         }
-
+        
+        static int[] ReadInput(string filename) {
+            var input = File.ReadAllLines(@$"input\{filename}.txt").Select(l => Int32.Parse(l));
+            return input.ToArray();
+        }
         static void day1_1() {
-            var input = System.IO.File.ReadAllLines(@"input1_1.txt").Select(l => Int32.Parse(l)).ToArray();
+            var input = ReadInput(@"input1_1");
             var previous = input[0];
             var count = 0;
 
@@ -23,7 +28,7 @@ namespace advent_of_code {
         }
 
         static void day1_2() {
-            var input = System.IO.File.ReadAllLines(@"input1_2.txt").Select(l => Int32.Parse(l)).ToArray();
+            var input = ReadInput(@"input1_2");
             var previous = input[0..3].Sum();
             var count = 0;
 
