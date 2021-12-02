@@ -12,4 +12,9 @@
       </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="input\input2_1.txt" />
+    <None Remove="input\input2_2.txt" />
+  </ItemGroup>
+
 </Project>

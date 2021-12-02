@@ -7,12 +7,63 @@ namespace advent_of_code {
         static void Main(string[] args) {
             day1_1();
             day1_2();
+            day2_1();
+            day2_2();
         }
         
+        static void day2_1() {
+            var input = ReadInputString("input2_1");
+
+            var depth = 0;
+            var forward = 0;
+
+            foreach(var line in input) {
+                var split = line.Split(" ");
+                var direction = split[0];
+                var value = Int32.Parse(split[1]);
+
+                switch (direction) {
+                    case "up": depth -= value; break;
+                    case "down": depth += value; break;
+                    case "forward": forward += value; break;
+                    default: break;
+                }
+            }
+            Console.WriteLine(depth * forward);
+
+        }
+        static void day2_2() {
+            var input = ReadInputString("input2_2");
+
+            var depth = 0;
+            var forward = 0;
+            var aim = 0;
+
+            foreach (var line in input) {
+                var split = line.Split(" ");
+                var direction = split[0];
+                var value = Int32.Parse(split[1]);
+
+                switch (direction) {
+                    case "up": aim -= value; break;
+                    case "down": aim += value; break;
+                    case "forward": forward += value; depth = (aim == 0) ? depth : depth + aim * value; break;
+                    default: break;
+                }
+            }
+            Console.WriteLine(depth * forward);
+
+        }
+
         static int[] ReadInput(string filename) {
             var input = File.ReadAllLines(@$"input\{filename}.txt").Select(l => Int32.Parse(l));
             return input.ToArray();
         }
+        static string[] ReadInputString(string filename) {
+            var input = File.ReadAllLines(@$"input\{filename}.txt");
+            return input;
+        }
+
         static void day1_1() {
             var input = ReadInput(@"input1_1");
             var previous = input[0];
