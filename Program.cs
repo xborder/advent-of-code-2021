@@ -12,7 +12,7 @@ namespace advent_of_code {
         }
         
         static void day2_1() {
-            var input = ReadInputString("input2_1");
+            var input = ReadInputString("i2");
 
             var depth = 0;
             var forward = 0;
@@ -33,7 +33,7 @@ namespace advent_of_code {
 
         }
         static void day2_2() {
-            var input = ReadInputString("input2_2");
+            var input = ReadInputString("i2");
 
             var depth = 0;
             var forward = 0;
@@ -65,7 +65,7 @@ namespace advent_of_code {
         }
 
         static void day1_1() {
-            var input = ReadInput(@"input1_1");
+            var input = ReadInput(@"i1");
             var previous = input[0];
             var count = 0;
 
@@ -79,7 +79,7 @@ namespace advent_of_code {
         }
 
         static void day1_2() {
-            var input = ReadInput(@"input1_2");
+            var input = ReadInput(@"i1");
             var previous = input[0..3].Sum();
             var count = 0;
 
