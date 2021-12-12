@@ -13,6 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="input\i10.txt" />
+    <None Remove="input\i11.txt" />
+    <None Remove="input\i3.txt" />
+    <None Remove="input\i4.txt" />
+    <None Remove="input\i5.txt" />
+    <None Remove="input\i6.txt" />
+    <None Remove="input\i7.txt" />
+    <None Remove="input\i8.txt" />
+    <None Remove="input\i9.txt" />
     <None Remove="input\input2_1.txt" />
     <None Remove="input\input2_2.txt" />
   </ItemGroup>
