@@ -15,6 +15,9 @@
   <ItemGroup>
     <None Remove="input\i10.txt" />
     <None Remove="input\i11.txt" />
+    <None Remove="input\i12.txt" />
+    <None Remove="input\i13.txt" />
+    <None Remove="input\i14.txt" />
     <None Remove="input\i3.txt" />
     <None Remove="input\i4.txt" />
     <None Remove="input\i5.txt" />

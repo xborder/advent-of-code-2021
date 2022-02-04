@@ -24,7 +24,212 @@ namespace advent_of_code {
             //day9_1();
             //day9_2();
             //day10();
-            day11();
+            //day11();
+            //day12();
+            //day13();
+            day14();
+        }
+
+        static void day14() {
+            var input = ReadInputString("i14");
+            Dictionary<string, string> rules = new Dictionary<string, string>();
+            LinkedList<string> polymere = new LinkedList<string>();
+
+
+            var template = input.First();
+
+            Dictionary<string, long> count = new Dictionary<string, long>();
+            foreach (var c in template.ToArray()) {
+                var ele = c.ToString();
+                if (!count.ContainsKey(ele)) {
+                    count.Add(ele, 1);
+                } else {
+                    count[ele]++;
+                }
+                polymere.AddLast(ele);
+            }
+
+            Console.WriteLine($"Template:\t\t{string.Join("", polymere)}");
+
+
+            foreach (var line in input.Skip(2)) {
+                var split = line.Split(" -> ");
+                var first = split[0].ToCharArray()[0];
+                var second = split[0].ToCharArray()[1];
+
+                var insert = split[1];
+
+                rules.Add(split[0], split[1]);
+            }
+
+            int step = 1;
+            int steps = 40;
+            while (step <= steps) {
+                var ele = polymere.First;
+                while (ele.Next != null) {
+                    var nextEle = ele.Next;
+                    var rule = ele.Value + nextEle.Value;
+                    if (rules.ContainsKey(rule)) {
+                        polymere.AddAfter(ele, rules[rule]); 
+                        if (!count.ContainsKey(rules[rule])) {
+                            count.Add(rules[rule], 1);
+                        } else {
+                            count[rules[rule]]++;
+                        }
+                    } else {
+                        Console.WriteLine("SKIPPED RULE");
+                    }
+                    ele = nextEle;
+                }
+                Console.WriteLine($"After step {step}:\t\t");
+                step++;
+            }
+
+            var ordered = count.OrderByDescending(p => p.Value);
+            Console.WriteLine($"{ordered.First().Key}  {ordered.First().Value}");
+            Console.WriteLine($"{ordered.Last().Key}  {ordered.Last().Value}");
+            Console.WriteLine(ordered.First().Value - ordered.Last().Value);
+        }
+
+        static void day13() {
+            var input = ReadInputString("i13");
+            bool breakline = false;
+
+            string[][] matrix = null;
+            void printMatrix() {
+                for (var i = 0; i < matrix.Length; i++) {
+                    for (var j = 0; j < matrix[i].Length; j++) {
+                        Console.Write(matrix[i][j] == null ? "." : matrix[i][j]);
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+            }
+
+            string[][] fold(bool vertical, int pos) {
+                string[][] tmp = new string[(vertical ? pos : matrix.Length)][];
+
+                for (var i = 0; i < tmp.Length; i++) {
+                    tmp[i] = new string[(vertical ? matrix[0].Length : pos)];
+                }
+
+                for (var y = 0; y < matrix.Length; y++) {
+                    for (var x = 0; x < matrix[y].Length; x++) {
+                        var newy = y;
+                        if (vertical && y > pos) {
+                            newy = (y % pos == 0) ? 0 : pos - (y % pos);
+                        }
+                        var newx = x;
+                        if (!vertical && x > pos) {
+                            newx = (x % pos == 0) ? 0 : pos - (x % pos);
+                        }
+                        if (matrix[y][x] != null && tmp[newy][newx] == null) {
+                            tmp[newy][newx] = matrix[y][x];
+                        }
+                    }
+                }
+                var count = 0;
+                for (var y = 0; y < tmp.Length; y++) {
+                    for (var x = 0; x < tmp[y].Length; x++) {
+                        if (tmp[y][x] != null) count++;
+                    }
+                }
+                Console.WriteLine(count);
+                return tmp;
+            }
+
+            List<(int x, int y)> points = new List<(int x, int y)>();
+            int maxy = 0, maxx = 0;
+            int iterations = 0;
+            foreach (var line in input) {
+                if (!breakline && line == "") {
+                    breakline = true;
+                    matrix = new string[maxy + 1][];
+                    for (var i = 0; i < matrix.Length; i++) {
+                        matrix[i] = new string[maxx + 1];
+                    }
+                    foreach (var point in points) {
+                        matrix[point.y][point.x] = "#";
+                    }
+
+                    //printMatrix();
+                    continue;
+                }
+
+                if (breakline) {
+                    if (line.Contains("fold along y=")) {
+                        var split = line.Split("fold along y=");
+                        matrix = fold(true, Int32.Parse(split[1]));
+                    } else {
+                        var split = line.Split("fold along x=");
+                        matrix = fold(false, Int32.Parse(split[1]));
+                    }
+                    iterations++;
+                    //if(iterations == 1) {
+                    //    return;
+                    //}
+                    Console.WriteLine(line);
+                    //printMatrix();
+                } else {
+                    var split = line.Split(",");
+                    var x = Int32.Parse(split[0]);
+                    var y = Int32.Parse(split[1]);
+                    maxx = x > maxx ? x : maxx;
+                    maxy = y > maxy ? y : maxy;
+                    points.Add((x, y));
+                }
+            }
+            printMatrix();
+        }
+        static void day12() {
+            var input = ReadInputString("i12");
+            Dictionary<string, List<string>> graph = new Dictionary<string, List<string>>();
+
+            foreach (var line in input) {
+                var split = line.Split('-');
+                string start = split[0], finish = split[1];
+
+                if (!graph.ContainsKey(start)) {
+                    graph.Add(start, new List<string>());
+                }
+                if (!graph.ContainsKey(finish)) {
+                    graph.Add(finish, new List<string>());
+                }
+                graph[start].Add(finish);
+                graph[finish].Add(start);
+            }
+
+
+            var stack = new Stack<string>();
+            stack.Push("start");
+
+            Console.WriteLine(FollowPath(graph, stack, false, "start"));
+        }
+
+        static int FollowPath(Dictionary<string, List<string>> graph, Stack<string> visited, bool smallVisitedTwice, string root) {
+
+            if (root == "end") {
+                return 1;
+            }
+
+            var paths = 0;
+
+            foreach (var node in graph[root]) {
+                Console.WriteLine(string.Join(",", visited.ToArray().Reverse()));
+                bool isSmall = node.ToLower() == node && node != "end";
+
+                if ((isSmall && visited.Contains(node) && smallVisitedTwice) || node == "start") {
+                    continue;
+                }
+
+                var visitedTwice = (isSmall && (visited.Contains(node) || smallVisitedTwice)) || smallVisitedTwice;
+                visited.Push(node);
+
+                paths += FollowPath(graph, visited, visitedTwice, node);
+
+                visited.Pop();
+            }
+            return paths;
         }
 
         static void day11() {
@@ -70,7 +275,7 @@ namespace advent_of_code {
                         }
                     }
                 }
-                
+
                 while (queue.Count() > 0) {
                     var pos = queue.Dequeue();
                     for (int x = pos.x - 1; x < pos.x + 2 && x < matrix.Length; x++) {
